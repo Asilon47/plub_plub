@@ -1,0 +1,29 @@
+/*
+ * can.h
+ *
+ *  Created on: Mar 22, 2025
+ *      Author: Asil
+ */
+
+#ifndef INC_CAN_H_
+#define INC_CAN_H_
+
+#include "main.h"
+#include "motor_control.h"
+#include "hall_sensor.h"
+#include "can.h"
+#include "stdbool.h"
+
+extern uint8_t RxData[8];
+extern uint8_t TxData[8];
+extern CAN_RxHeaderTypeDef RxHeader;
+extern CAN_TxHeaderTypeDef TxHeader;
+extern uint32_t TxMailbox;
+extern CAN_HandleTypeDef hcan;
+
+void setCanFilter();
+void sendcan();
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
+void init_hall_sensors(void);
+
+#endif /* INC_CAN_H_ */

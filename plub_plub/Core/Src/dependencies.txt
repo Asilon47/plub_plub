@@ -1,2 +1,0 @@
-syscalls.o: syscalls.c
-sysmem.o: sysmem.c
