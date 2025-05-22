@@ -1,0 +1,5 @@
+../Core/Src/motor_cotrol.c:23:24:tick_to_duty	1
+../Core/Src/motor_cotrol.c:34:20:set_motor_direction	3
+../Core/Src/motor_cotrol.c:63:24:clamp_duty	3
+../Core/Src/motor_cotrol.c:79:8:controlador_PID	2
+../Core/Src/motor_cotrol.c:108:6:update_all_motors	1

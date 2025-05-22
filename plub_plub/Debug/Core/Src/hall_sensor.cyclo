@@ -1,0 +1,6 @@
+../Core/Src/hall_sensor.c:18:6:update_motor_position	17
+../Core/Src/hall_sensor.c:100:6:compute_speed_for_all_motors	1
+../Core/Src/hall_sensor.c:140:9:get_motor_position	5
+../Core/Src/hall_sensor.c:151:8:get_motor_direction	5
+../Core/Src/hall_sensor.c:162:7:get_motor_speed_ticks_per_sec	5
+../Core/Src/hall_sensor.c:173:6:init_hall_sensors	1
