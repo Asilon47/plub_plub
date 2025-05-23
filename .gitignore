@@ -1,5 +1,8 @@
 /Debug/
 /Release/
+/build/
+/install/
+/log/
 *.o
 *.d
 *.elf
