@@ -9,8 +9,8 @@ No part of this code may be used, reproduced, or distributed in any form without
 <!--
   ╔════════════════════════════════════════════════════════════════╗
   ║                                                                ║
-  ║      🌟 Welcome to **Project Aurora**: The Dawn of Innovation   ║
-  ║                                                                ║
+  ║      🌟 Welcome to **Project Aurora**: The Dawn of Innovation   wohoo       ║
+  ║                                                                          ║
   ╚════════════════════════════════════════════════════════════════╝
 -->
 
