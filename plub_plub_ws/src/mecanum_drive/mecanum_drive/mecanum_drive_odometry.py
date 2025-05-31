@@ -36,7 +36,7 @@ class OdometryNode(Node):
         self.create_subscription(Int16MultiArray, 'wheel_ticks', self.ticksCallback, 10)
         self.create_subscription(PoseWithCovarianceStamped, 'initialpose', self.on_initial_pose, 10)
 
-        self.declare_parameter('ticks_per_meter', 13606.30)
+        self.declare_parameter('ticks_per_meter', 4,332.0)
         self.declare_parameter('wheel_separation', 0.34)
         self.declare_parameter('wheel_separation_length', 0.24)
         self.declare_parameter('rate', 20.0)

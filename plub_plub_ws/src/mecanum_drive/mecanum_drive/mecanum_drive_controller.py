@@ -16,7 +16,7 @@ class ControllerNode(Node):
         self.angularVelocity = 0.0
         self.wheels_to_send = Int16MultiArray()
 
-        self.declare_parameter('ticks_per_meter', 13606.30)
+        self.declare_parameter('ticks_per_meter', 4332.0)
         self.declare_parameter('wheel_separation', 0.34)
         self.declare_parameter('wheel_separation_length', 0.24)
         self.declare_parameter('max_motor_speed', (3456))
