@@ -110,9 +110,10 @@ The launch file orchestrates:
 
 ### 5.1 Serial and USB Permissions
 
-| Immediate (non-persistent) | Persistent (`udev` rule) |
-|---------------------------|---------------------------|
-| `sudo chmod 777 /dev/ttyUSB0` | Create `/etc/udev/rules.d/99-plub.rules` with: <br>`SUBSYSTEM=="usb", ATTRS{idVendor}=="03e7", MODE="0666"` <br>then reload rules: <br>`sudo udevadm control --reload-rules && sudo udevadm trigger` |
+```bash
+sudo chmod 777 /dev/ttyUSB0`
+sudo chmod 666 /dev/ttyUSB0
+```
 
 ### 5.2 CAN FD Channel Initialisation
 
