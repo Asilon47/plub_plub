@@ -21,8 +21,6 @@
 | **`cad/`**   | CAD assemblies.                                     |
                                                                                                                                   |
 
-\*The MATLAB and CAD artefacts are **not** elaborated further in this README; they are retained for reproducibility of the mechanical and system-identification studies.
-
 ---
 
 ## 3. MCU Firmware: Build and Flash Workflow
