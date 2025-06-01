@@ -112,7 +112,6 @@ The launch file orchestrates:
 
 ```bash
 sudo chmod 777 /dev/ttyUSB0`
-sudo chmod 666 /dev/ttyUSB0
 ```
 
 ### 5.2 CAN FD Channel Initialisation
