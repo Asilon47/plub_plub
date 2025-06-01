@@ -6,8 +6,8 @@
 
 ---
 
-## 1. Overview and Research Motivation
-`plub_plub` aggregates the mechanical, electronic, and cyber-physical artefacts required to study advanced feedback control, sensor fusion, and on-board autonomy for differential-drive mobile robots. The repository is intentionally partitioned so that each subsystem can be analysed, verified, and reproduced in isolation before being integrated into the complete ROS 2 ecosystem.
+## 1. Overview
+`plub_plub` aggregates the mechanical, electronic, and software artefacts required to study feedback control, sensor fusion, and on-board autonomy for mecanum wheeled mobile robots. The repository is intentionally partitioned so that each subsystem can be analysed, verified, and reproduced in isolation before being integrated into the complete ecosystem.
 
 ---
 
@@ -16,10 +16,10 @@
 | Directory / File                              | Purpose (concise)                                                                                                                                                 |
 |-----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **`MCU/`**                                    | Bare-metal firmware for the *STM32F4* micro-controller unit (MCU). Written in C 17, organised as a conventional *STM32CubeMX* project with `Core/` and `Drivers/`.|
-| **`plub_plub_ws/`**                           | Colcon-driven ROS 2 workspace (*Humble* LTS), including all message definitions, nodes, launch files, and unit tests (`src/`, `launch/`, `test/`).                |
-| **`motors_system_analysis/`**                 | MATLAB\* measurements (🄫 MATLAB R2024b) for parameter identification and closed-loop eigen-analysis of the traction motors.                                       |
-| **`cad/`** *(or similar, e.g. `robot_cad/`)*  | Parametric CAD assemblies (STEP & Parasolid) plus 2-D technical drawings of the chassis, sensor mounts, and battery housing.                                     |
-| **`.gitignore`, `LICENSE`, `README.md`**      | Conventional project metadata.                                                                                                                                    |
+| **`plub_plub_ws/`**                           | Colcon-driven ROS 2 workspace (*Humble* LTS), including all message definitions, nodes and launch files.                |
+| **`motors_system_analysis/`**                 | MATLAB\* measurements (🄫 MATLAB R2024b) for parameter identification and closed-loop analysis of the  motors.                                       |
+| **`cad/`**   | CAD assemblies.                                     |
+                                                                                                                                  |
 
 \*The MATLAB and CAD artefacts are **not** elaborated further in this README; they are retained for reproducibility of the mechanical and system-identification studies.
 
