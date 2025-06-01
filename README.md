@@ -129,27 +129,8 @@ candump can1
 
 ---
 
-## 6. Experimental Reproduction and Scholarly Use
 
-All experiments reported in the companion thesis can be reproduced by following these sequential steps:
-
-1. **Mechatronic Assembly:** Refer to the CAD drawings for exact hole patterns and material specifications (Section 2).  
-2. **Controller Deployment:** Flash the MCU as per Section 3.3, ensuring the firmware commit hash matches the one cited in the manuscript.  
-3. **Middleware Bring-up:** Build and source the ROS 2 workspace (Section 4.2) on an Ubuntu 22.04 host.  
-4. **Communication Sanity Checks:**  
-   * `ros2 topic echo /joint_states` — confirms UART bridge integrity.  
-   * `cansend can1 …` / `candump can1` — validates CAN timing budget.  
-5. **Closed-Loop Trials:** Launch the full stack (Section 4.3) and execute the provided ROS bags for benchmark trajectories (`ros2 bag play bags/figure8`).  
-
----
-
-## 7. Citing This Repository
-
-> **A. Arnous**, “**plub_plub: A Modular ROS 2 Platform for Investigating Embedded Motor Control and Sensor Fusion**,” *Trabajo Fin de Grado*, Universidad ___, 2025. GitHub: <https://github.com/Asilon47/plub_plub>
-
----
-
-## 8. License
+## 6. License
 
 ```
 Proprietary Software License v1.0
