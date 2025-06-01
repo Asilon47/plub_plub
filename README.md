@@ -1,7 +1,7 @@
 # **plub_plub – A Modular Hardware/Software Stack for Mobile Robotic Research**
 
 > **Author:** Asil Arnous  
-> **Institution:** *Trabajo Fin de Grado, 2025*  
+> **Institution:** *Universidad de Deusto*  
 > **License:** *Proprietary Software License v1.0* (see full text at the end of this document)
 
 ---
