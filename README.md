@@ -89,13 +89,13 @@ sudo apt install ros-humble-desktop python3-colcon-common-extensions \
 cd plub_plub_ws
 rosdep install --from-paths src --ignore-src -y
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-source install/setup.bash
+source ./install/setup.bash
 ```
 
 ### 4.3 Launching the Full Stack
 
 ```bash
-ros2 launch plub_bringup base.launch.py use_can:=true mcu_baud:=115200
+ros2 launch run run.launch.py
 ```
 
 The launch file orchestrates:
