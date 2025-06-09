@@ -106,6 +106,9 @@ ros2 launch run run.launch.py
 
 ```bash
 sudo chmod 777 /dev/ttyUSB0`
+lsusb \
+  | awk '/03e7/ { gsub(/:$/,"",$4); printf "/dev/bus/usb/%03d/%03d\n", $2, $4 }' \
+  | xargs sudo chmod 666
 ```
 
 ### 5.2 CAN FD Channel Initialisation
