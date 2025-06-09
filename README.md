@@ -98,12 +98,6 @@ source ./install/setup.bash
 ros2 launch run run.launch.py
 ```
 
-The launch file orchestrates:
-
-1. **`mcu_bridge_node`** – DDS ↔ UART gateway to the STM32 running `rosserial_transport`.  
-2. **`base_controller`** – `diff_drive_controller` from `ros2_control`.  
-3. **Sensor drivers** – IMU, wheel encoders, and optional depth camera.
-
 ---
 
 ## 5. Operating-System Level Configuration
@@ -117,7 +111,7 @@ sudo chmod 777 /dev/ttyUSB0`
 ### 5.2 CAN FD Channel Initialisation
 
 ```bash
-sudo ip link set can1 type can bitrate 500000 dbitrate 2000000 fd on
+sudo ip link set can1 type can bitrate 500000
 sudo ip link set can1 up
 ```
 
