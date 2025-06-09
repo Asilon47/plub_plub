@@ -88,7 +88,7 @@ sudo apt install ros-humble-desktop python3-colcon-common-extensions \
 ```bash
 cd plub_plub_ws
 rosdep install --from-paths src --ignore-src -y
-colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+colcon build --symlink-install
 source ./install/setup.bash
 ```
 
