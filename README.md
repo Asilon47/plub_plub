@@ -10,7 +10,7 @@
 ## 2. Repository Topology
 | Directory / File                              | Purpose (concise)                                                                                                                                                 |
 |-----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **`MCU/`**                                    | Bare-metal firmware for the *STM32F4* micro-controller unit (MCU). Written in C 17, organised as a conventional *STM32CubeMX* project with `Core/` and `Drivers/`.|
+| **`MCU/`**                                    | Bare-metal firmware for the *STM32F4* micro-controller unit (MCU). Written in C 17, organised as a conventional *STM32CubeMX* project with `Core/` and `Drivers/`.| 
 | **`plub_plub_ws/`**                           | Colcon-driven ROS 2 workspace (*Humble* LTS), including all message definitions, nodes and launch files.                |
 | **`motors_system_analysis/`**                 | MATLAB\* measurements (🄫 MATLAB R2024b) for parameter identification and closed-loop analysis of the  motors.                                       |
 | **`cad/`**   | CAD assemblies.                                     |
