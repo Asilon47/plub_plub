@@ -1,5 +1,3 @@
-@@ -1,4 +1,4 @@
-# **plub_plub – A Modular Hardware/Software Stack for Mobile Robotic Research**
 # **plub_plub – A Modular Hardware/Software Stack for Mobile Robotic**
 
 > **Author:** Asil Arnous  
