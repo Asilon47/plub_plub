@@ -1,0 +1,19 @@
+<package format="3">
+  <name>can_communication</name>
+  <version>0.0.0</version>
+  <description>CAN communication node for ROS 2</description>
+  <maintainer email="you@todo.todo">Your Name</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>python3-can</exec_depend> <!-- Add this line -->
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+

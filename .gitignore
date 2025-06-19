@@ -1,0 +1,14 @@
+/Debug/
+/Release/
+/build/
+/install/
+/log/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.ioc.backup
+/.settings/
+/*.launch

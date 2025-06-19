@@ -1,0 +1,41 @@
+#ifndef HALL_SENSOR_H_
+#define HALL_SENSOR_H_
+
+#define ENCODER_CPR 64.0f
+#define FILTER_ALPHA 0.5f
+#define TIM2_FREQUENCY_HZ 100.0f
+
+
+#include "main.h"
+#include "motor_control.h"
+#include "can.h"
+#include "stdbool.h"
+
+typedef struct {
+    uint32_t last_tick;
+    int16_t position;
+    int8_t direction;
+    uint8_t prev_ab_state;
+    GPIO_TypeDef *portA;
+    uint16_t pinA;
+    GPIO_TypeDef *portB;
+    uint16_t pinB;
+    int16_t accum_counts;
+    int16_t ticks_per_sec_computed;
+    double filtered_ticks_per_sec;
+    bool reverse_wiring;
+} MotorHallSensor;
+
+extern MotorHallSensor motor1;
+extern MotorHallSensor motor2;
+extern MotorHallSensor motor3;
+extern MotorHallSensor motor4;
+
+void update_motor_position(void);
+void compute_speed_for_all_motors(void);
+int16_t get_motor_position(uint8_t id);
+int8_t get_motor_direction(uint8_t id);
+float get_motor_speed_ticks_per_sec(uint8_t id);
+void init_hall_sensors(void);
+
+#endif /* HALL_SENSOR_H_ */

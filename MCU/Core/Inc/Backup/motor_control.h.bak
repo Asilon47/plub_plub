@@ -1,0 +1,51 @@
+/*
+ * motor_control.h
+ *
+ *  Created on: Mar 2, 2025
+ *      Author: Asil
+ */
+
+#ifndef MOTOR_CONTROL_H_
+#define MOTOR_CONTROL_H_
+
+#define MAX_TICKS_SEC 6912.0f
+
+#include "main.h"
+#include "hall_sensor.h"
+#include "can.h"
+#include "stdbool.h"
+#include <stdlib.h>
+#include <math.h>
+
+typedef struct constants_PID {
+	double Kp;
+	double Td;
+	double Ti;
+	double dt;
+} constants_PID;
+
+typedef struct datos_PID {
+	double errorAnterior;
+	double errorAcumulado;
+} datos_PID;
+
+
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim16;
+extern TIM_HandleTypeDef htim17;
+
+
+#define DUTY_MAX 1999U
+#define DUTY_MIN 0U
+#define DUTY_STEP 50U
+#define DELAY_STEP 4U
+
+
+
+void update_all_motors(double setpoint_fl, // front-left
+		double setpoint_fr, // front-right
+		double setpoint_rl, // rear-left
+		double setpoint_rr, // rear-right
+                       bool resetPID);
+
+#endif /* MOTOR_CONTROL_H_ */

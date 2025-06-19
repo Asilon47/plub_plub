@@ -1,0 +1,200 @@
+#include "motor_control.h"
+
+// Helper function to make sure the duty cycle stays within limits
+static inline uint16_t clamp_duty(uint16_t duty) {
+	if (duty > DUTY_MAX)
+		return DUTY_MAX;
+	if (duty < DUTY_MIN)
+		return DUTY_MIN;
+	return duty;
+}
+
+// Gradually adjust motor speed to avoid sudden jumps
+void smooth_set_motor_speed(TIM_HandleTypeDef *htim, uint32_t channel,
+		uint16_t target_duty) {
+	// Ensure the target duty cycle is within limits
+	target_duty = clamp_duty(target_duty);
+
+	volatile uint32_t *ccrReg = NULL;
+	switch (channel) {
+	case TIM_CHANNEL_1:
+		ccrReg = &htim->Instance->CCR1;
+		break;
+	case TIM_CHANNEL_2:
+		ccrReg = &htim->Instance->CCR2;
+		break;
+	case TIM_CHANNEL_3:
+		ccrReg = &htim->Instance->CCR3;
+		break;
+	case TIM_CHANNEL_4:
+		ccrReg = &htim->Instance->CCR4;
+		break;
+	default:
+		return; // Exit if channel is invalid
+	}
+
+	// Get the current speed and clamp it just in case
+	uint16_t current_duty = clamp_duty((uint16_t) *ccrReg);
+
+	// Skip adjustments if the current duty is already close enough to the target
+	if ((current_duty >= target_duty - 100)
+			&& (current_duty <= target_duty + 100)) {
+		return;
+	}
+
+	// Increase speed smoothly if below target
+	if (current_duty < target_duty) {
+		while (current_duty < target_duty) {
+			current_duty += DUTY_STEP;
+			current_duty = clamp_duty(current_duty);
+			*ccrReg = current_duty;
+			HAL_Delay(DELAY_STEP);
+
+			if (current_duty == target_duty)
+				break;
+		}
+	} else // Decrease speed smoothly if above target
+	{
+		while (current_duty > target_duty) {
+			if (current_duty < DUTY_STEP)
+				current_duty = DUTY_MIN; // Prevent underflow
+			else
+				current_duty -= DUTY_STEP;
+
+			current_duty = clamp_duty(current_duty);
+			*ccrReg = current_duty;
+			HAL_Delay(DELAY_STEP);
+
+			if (current_duty == target_duty)
+				break;
+		}
+	}
+}
+
+// Move forward smoothly
+void move_forward() {
+	stop_motors();
+
+	// Set motor direction
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+
+	// Apply max speed gradually
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MAX);
+	smooth_set_motor_speed(&htim16, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim17, TIM_CHANNEL_1, DUTY_MAX);
+}
+
+// Move backward smoothly
+void move_backward() {
+	stop_motors();
+
+	// Set motor direction
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+
+	// Apply max speed gradually
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MAX);
+	smooth_set_motor_speed(&htim16, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim17, TIM_CHANNEL_1, DUTY_MAX);
+}
+
+// Stop all motors immediately
+void stop_motors() {
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_1, DUTY_MIN);
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MIN);
+	smooth_set_motor_speed(&htim16, TIM_CHANNEL_1, DUTY_MIN);
+	smooth_set_motor_speed(&htim17, TIM_CHANNEL_1, DUTY_MIN);
+
+	// Cut power to motor driver
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+}
+
+// Turn left smoothly
+void move_left() {
+	stop_motors();
+
+	// Set direction
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+
+	// Gradually increase speed
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MAX);
+	smooth_set_motor_speed(&htim16, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim17, TIM_CHANNEL_1, DUTY_MAX);
+}
+
+// Turn right smoothly
+void move_right() {
+	stop_motors();
+
+	// Set direction
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+
+	// Gradually increase speed
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MAX);
+	smooth_set_motor_speed(&htim16, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim17, TIM_CHANNEL_1, DUTY_MAX);
+}
+
+// Rotate clockwise in place
+void rotate_clockwise() {
+	stop_motors();
+
+	// Set direction
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+
+	// Gradually increase speed
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MAX);
+	smooth_set_motor_speed(&htim16, TIM_CHANNEL_1, DUTY_MAX);
+	smooth_set_motor_speed(&htim17, TIM_CHANNEL_1, DUTY_MAX);
+}
+
+// Rotate counterclockwise in place
+void rotate_counterclockwise() {
+	stop_motors();
+
+	// Set direction
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+
+	// Gradually increase speed
+	smooth_set_motor_speed(&htim1, TIM_CHANNEL_2, DUTY_MAX);
+}

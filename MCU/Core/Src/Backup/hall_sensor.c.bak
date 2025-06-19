@@ -1,0 +1,352 @@
+#include "hall_sensor.h"
+
+MotorHallSensor motor1;
+MotorHallSensor motor2;
+MotorHallSensor motor3;
+MotorHallSensor motor4;
+
+static const int8_t quadrature_table[16] = {
+    0,  +1, -1,  0,  // Previous state 00
+   -1,   0,  0, +1,  // Previous state 01
+   +1,   0,  0, -1,  // Previous state 10
+    0,  -1, +1,  0   // Previous state 11
+};
+
+void update_motor_position(void) {
+    // --- Motor 1 ---
+    {
+        MotorHallSensor *m = &motor1;
+
+        uint8_t A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+        uint8_t B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+        uint8_t ab_state = (B << 1) | A;
+
+        if (ab_state != m->prev_ab_state) {
+            uint8_t lookup_index = (m->prev_ab_state << 2) | ab_state;
+            int8_t movement = quadrature_table[lookup_index];
+
+            if (movement != 0) {
+                movement = m->reverse_wiring ? -movement : movement;
+                m->position += movement;
+                m->direction = (movement > 0) ? +1 : -1;
+                m->accum_counts += movement;
+            }
+
+            m->prev_ab_state = ab_state;
+
+        }
+    }
+
+    // --- Motor 2 ---
+    {
+        MotorHallSensor *m = &motor2;
+
+        uint8_t A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+        uint8_t B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+        uint8_t ab_state = (B << 1) | A;
+
+        if (ab_state != m->prev_ab_state) {
+            uint8_t lookup_index = (m->prev_ab_state << 2) | ab_state;
+            int8_t movement = quadrature_table[lookup_index];
+
+            if (movement != 0) {
+                movement = m->reverse_wiring ? -movement : movement;
+                m->position += movement;
+                m->direction = (movement > 0) ? +1 : -1;
+                m->accum_counts += movement;
+            }
+
+            m->prev_ab_state = ab_state;
+
+        }
+    }
+
+    // --- Motor 3 ---
+    {
+        MotorHallSensor *m = &motor3;
+
+        uint8_t A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+        uint8_t B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+        uint8_t ab_state = (B << 1) | A;
+
+        if (ab_state != m->prev_ab_state) {
+            uint8_t lookup_index = (m->prev_ab_state << 2) | ab_state;
+            int8_t movement = quadrature_table[lookup_index];
+
+            if (movement != 0) {
+                movement = m->reverse_wiring ? -movement : movement;
+                m->position += movement;
+                m->direction = (movement > 0) ? +1 : -1;
+                m->accum_counts += movement;
+            }
+
+            m->prev_ab_state = ab_state;
+
+        }
+    }
+
+    // --- Motor 4 ---
+    {
+        MotorHallSensor *m = &motor4;
+
+        uint8_t A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+        uint8_t B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+        uint8_t ab_state = (B << 1) | A;
+
+        if (ab_state != m->prev_ab_state) {
+            uint8_t lookup_index = (m->prev_ab_state << 2) | ab_state;
+            int8_t movement = quadrature_table[lookup_index];
+
+            if (movement != 0) {
+                movement = m->reverse_wiring ? -movement : movement;
+                m->position += movement;
+                m->direction = (movement > 0) ? +1 : -1;
+                m->accum_counts += movement;
+            }
+
+            m->prev_ab_state = ab_state;
+
+        }
+    }
+}
+
+//
+//
+//void update_motor_position(void) {
+//    uint32_t current_tick = HAL_GetTick();
+//
+//    // === Motor 1 ===
+//    {
+//        MotorHallSensor *m = &motor1;
+//        uint8_t current_A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+//        uint8_t current_B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+//        uint8_t prev_A = (m->prev_ab_state & 1);
+//        uint8_t prev_B = (m->prev_ab_state >> 1);
+//
+//        if (prev_A == 0 && current_A == 1) {
+//            int8_t movement = (current_B == 0) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//        if (prev_B == 0 && current_B == 1) {
+//            int8_t movement = (current_A == 1) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//
+//        m->prev_ab_state = (current_B << 1) | current_A;
+//    }
+//
+//    // === Motor 2 ===
+//    {
+//        MotorHallSensor *m = &motor2;
+//        uint8_t current_A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+//        uint8_t current_B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+//        uint8_t prev_A = (m->prev_ab_state & 1);
+//        uint8_t prev_B = (m->prev_ab_state >> 1);
+//
+//        if (prev_A == 0 && current_A == 1) {
+//            int8_t movement = (current_B == 0) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//        if (prev_B == 0 && current_B == 1) {
+//            int8_t movement = (current_A == 1) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//
+//        m->prev_ab_state = (current_B << 1) | current_A;
+//    }
+//
+//    // === Motor 3 ===
+//    {
+//        MotorHallSensor *m = &motor3;
+//        uint8_t current_A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+//        uint8_t current_B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+//        uint8_t prev_A = (m->prev_ab_state & 1);
+//        uint8_t prev_B = (m->prev_ab_state >> 1);
+//
+//        if (prev_A == 0 && current_A == 1) {
+//            int8_t movement = (current_B == 0) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//        if (prev_B == 0 && current_B == 1) {
+//            int8_t movement = (current_A == 1) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//
+//        m->prev_ab_state = (current_B << 1) | current_A;
+//    }
+//
+//    // === Motor 4 ===
+//    {
+//        MotorHallSensor *m = &motor4;
+//        uint8_t current_A = HAL_GPIO_ReadPin(m->portA, m->pinA);
+//        uint8_t current_B = HAL_GPIO_ReadPin(m->portB, m->pinB);
+//        uint8_t prev_A = (m->prev_ab_state & 1);
+//        uint8_t prev_B = (m->prev_ab_state >> 1);
+//
+//        if (prev_A == 0 && current_A == 1) {
+//            int8_t movement = (current_B == 0) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//        if (prev_B == 0 && current_B == 1) {
+//            int8_t movement = (current_A == 1) ? 1 : -1;
+//            movement = m->reverse_wiring ? -movement : movement;
+//            m->position += movement;
+//            m->direction = (movement > 0) ? 1 : -1;
+//            m->accum_counts += movement;
+//            m->last_tick = current_tick;
+//        }
+//
+//        m->prev_ab_state = (current_B << 1) | current_A;
+//    }
+//}
+
+
+void compute_speed_for_all_motors(void) {
+    // === Motor 1 ===
+    {
+        MotorHallSensor *m = &motor1;
+        m->ticks_per_sec_computed = (m->accum_counts) * (TIM2_FREQUENCY_HZ);
+        m->accum_counts = 0;
+        m->filtered_ticks_per_sec = FILTER_ALPHA * m->filtered_ticks_per_sec +
+                                     (1.0f - FILTER_ALPHA) * m->ticks_per_sec_computed;
+    }
+
+    // === Motor 2 ===
+    {
+        MotorHallSensor *m = &motor2;
+        m->ticks_per_sec_computed = (m->accum_counts) * (TIM2_FREQUENCY_HZ);
+        m->accum_counts = 0;
+        m->filtered_ticks_per_sec = FILTER_ALPHA * m->filtered_ticks_per_sec +
+                                     (1.0f - FILTER_ALPHA) * m->ticks_per_sec_computed;
+    }
+
+    // === Motor 3 ===
+    {
+        MotorHallSensor *m = &motor3;
+        m->ticks_per_sec_computed = (m->accum_counts) * (TIM2_FREQUENCY_HZ);
+        m->accum_counts = 0;
+        m->filtered_ticks_per_sec = FILTER_ALPHA * m->filtered_ticks_per_sec +
+                                     (1.0f - FILTER_ALPHA) * m->ticks_per_sec_computed;
+    }
+
+    // === Motor 4 ===
+    {
+        MotorHallSensor *m = &motor4;
+        m->ticks_per_sec_computed = (m->accum_counts) * (TIM2_FREQUENCY_HZ);
+        m->accum_counts = 0;
+        m->filtered_ticks_per_sec = FILTER_ALPHA * m->filtered_ticks_per_sec +
+                                     (1.0f - FILTER_ALPHA) * m->ticks_per_sec_computed;
+    }
+}
+
+
+int16_t get_motor_position(uint8_t id) {
+    switch (id) {
+        case 1: return motor1.position;
+        case 2: return motor2.position;
+        case 3: return motor3.position;
+        case 4: return motor4.position;
+        default: return 0;
+    }
+}
+
+int8_t get_motor_direction(uint8_t id) {
+    switch (id) {
+        case 1: return motor1.direction;
+        case 2: return motor2.direction;
+        case 3: return motor3.direction;
+        case 4: return motor4.direction;
+        default: return 0;
+    }
+}
+
+float get_motor_speed_ticks_per_sec(uint8_t id) {
+    switch (id) {
+        case 1: return motor1.filtered_ticks_per_sec;
+        case 2: return motor2.filtered_ticks_per_sec;
+        case 3: return motor3.filtered_ticks_per_sec;
+        case 4: return motor4.filtered_ticks_per_sec;
+        default: return 0.0f;
+    }
+}
+void init_hall_sensors(void) {
+    motor1.portA = GPIOB;
+    motor1.pinA = GPIO_PIN_6;
+    motor1.portB = GPIOB;
+    motor1.pinB = GPIO_PIN_7;
+    motor1.last_tick = 0;
+    motor1.accum_counts = 0;
+    motor1.position = 0;
+    motor1.direction = 0;
+    motor1.prev_ab_state = 0;
+    motor1.ticks_per_sec_computed = 0.0f;
+    motor1.filtered_ticks_per_sec = 0.0f;
+    motor1.reverse_wiring = false;
+
+    motor2.portA = GPIOA;
+    motor2.pinA = GPIO_PIN_15;
+    motor2.portB = GPIOB;
+    motor2.pinB = GPIO_PIN_3;
+    motor2.last_tick = 0;
+    motor2.accum_counts = 0;
+    motor2.position = 0;
+    motor2.direction = 0;
+    motor2.prev_ab_state = 0;
+    motor2.ticks_per_sec_computed = 0.0f;
+    motor2.filtered_ticks_per_sec = 0.0f;
+    motor2.reverse_wiring = false;
+
+    motor3.portA = GPIOC;
+    motor3.pinA = GPIO_PIN_12;
+    motor3.portB = GPIOD;
+    motor3.pinB = GPIO_PIN_2;
+    motor3.last_tick = 0;
+    motor3.accum_counts = 0;
+    motor3.position = 0;
+    motor3.direction = 0;
+    motor3.prev_ab_state = 0;
+    motor3.ticks_per_sec_computed = 0.0f;
+    motor3.filtered_ticks_per_sec = 0.0f;
+    motor3.reverse_wiring = true;
+
+    motor4.portA = GPIOC;
+    motor4.pinA = GPIO_PIN_10;
+    motor4.portB = GPIOC;
+    motor4.pinB = GPIO_PIN_11;
+    motor4.last_tick = 0;
+    motor4.accum_counts = 0;
+    motor4.position = 0;
+    motor4.direction = 0;
+    motor4.prev_ab_state = 0;
+    motor4.ticks_per_sec_computed = 0.0f;
+    motor4.filtered_ticks_per_sec = 0.0f;
+    motor4.reverse_wiring = true;
+}

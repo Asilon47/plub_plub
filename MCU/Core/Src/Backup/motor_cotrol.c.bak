@@ -1,0 +1,134 @@
+/*
+ * motor_cotrol.c
+ *
+ *  Created on: Mar 22, 2025
+ *      Author: Asil
+ */
+
+#include "motor_control.h"
+
+#define FORWARD 1
+#define BACKWARD 0
+
+static constants_PID pidConsts1 = { .Kp = 1.0, .Td = 0.0, .Ti = 999999.0, .dt = 0.1 };
+static constants_PID pidConsts2 = { .Kp = 1.0, .Td = 0.0, .Ti = 999999.0, .dt = 0.1 };
+static constants_PID pidConsts3 = { .Kp = 1.0, .Td = 0.0, .Ti = 999999.0, .dt = 0.1 };
+static constants_PID pidConsts4 = { .Kp = 1.0, .Td = 0.0, .Ti = 999999.0, .dt = 0.1 };
+
+
+static datos_PID motor1_pidData = {0};
+static datos_PID motor2_pidData = {0};
+static datos_PID motor3_pidData = {0};
+static datos_PID motor4_pidData = {0};
+
+static inline uint16_t tick_to_duty(double ticksec){
+	return (uint16_t)((ticksec / MAX_TICKS_SEC)  * DUTY_MAX);
+}
+static inline void set_motor_direction(double speed,
+                                       GPIO_TypeDef* GPIOx_pin1, uint16_t pin1,
+                                       GPIO_TypeDef* GPIOx_pin2, uint16_t pin2)
+{
+    if (speed > 0.0)
+    {
+        // Forward
+        HAL_GPIO_WritePin(GPIOx_pin1, pin1, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOx_pin2, pin2, GPIO_PIN_RESET);
+    }
+    else if (speed < 0.0)
+    {
+        // Backward
+        HAL_GPIO_WritePin(GPIOx_pin1, pin1, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOx_pin2, pin2, GPIO_PIN_SET);
+    }
+    else
+    {
+        // Speed = 0 => brake
+        HAL_GPIO_WritePin(GPIOx_pin1, pin1, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOx_pin2, pin2, GPIO_PIN_SET);
+    }
+}
+
+// Helper function to make sure the duty cycle stays within limits
+static inline uint16_t clamp_duty(double duty)
+{
+    if (duty < DUTY_MIN) return DUTY_MIN;
+    if (duty > DUTY_MAX) return DUTY_MAX;
+    return (uint16_t)duty;
+}
+
+
+double controlador_PID(double setpoint, double pv,
+                       const constants_PID *c,
+                       datos_PID *d,
+                       bool reset)
+{
+	const double dt = c->dt;
+    const double kp = c->Kp;
+    const double ti = c->Ti;
+    const double td = c->Td;
+
+
+    const double error = setpoint - pv;
+
+
+    const double der_error = (error - d->errorAnterior) / dt;
+    d->errorAnterior = error;
+
+
+    d->errorAcumulado = reset ? 0.0 : (d->errorAcumulado + error * dt);
+
+
+    return (kp * error) + (td * der_error) + (d->errorAcumulado / ti);
+}
+
+
+void update_all_motors(double setpoint_fl, // front-left
+                       double setpoint_fr, // front-right
+                       double setpoint_rl, // rear-left
+                       double setpoint_rr, // rear-right
+                       bool resetPID)
+{
+    // ---------------------
+    // 1) Motor 1 (front-left) on TIM1->CCR1
+    {
+    	int16_t pv  = (int16_t)round(motor1.filtered_ticks_per_sec);
+        set_motor_direction(setpoint_fl, GPIOA, GPIO_PIN_0, GPIOA, GPIO_PIN_1);
+       double out = controlador_PID(fabs(setpoint_fl), fabs(pv), &pidConsts1, &motor1_pidData, resetPID);
+       uint16_t c_duty = tick_to_duty(out);
+        uint16_t duty = clamp_duty(c_duty);
+        TIM1->CCR1 = (uint16_t)duty;
+    }
+
+    // ---------------------
+    // 2) Motor 2 (rear-left) on TIM17->CCR1
+    {
+    	int16_t pv  = (int16_t)round(motor2.filtered_ticks_per_sec);
+        set_motor_direction(setpoint_rl, GPIOB, GPIO_PIN_8, GPIOB, GPIO_PIN_9);
+        double out = controlador_PID(fabs(setpoint_rl), fabs(pv), &pidConsts2, &motor2_pidData, resetPID);
+        uint16_t c_duty = tick_to_duty(out);
+        uint16_t duty = clamp_duty(c_duty);
+        TIM17->CCR1 = (uint16_t)duty;
+    }
+
+    // ---------------------
+    // 3) Motor 3 (front-right) on TIM16->CCR1
+    {
+    	int16_t pv  = (int16_t)round(motor3.filtered_ticks_per_sec);
+        set_motor_direction(setpoint_fr, GPIOC, GPIO_PIN_6, GPIOC, GPIO_PIN_7);
+       double out = controlador_PID(fabs(setpoint_fr), fabs(pv), &pidConsts3, &motor3_pidData, resetPID);
+       uint16_t c_duty = tick_to_duty(out);
+        uint16_t duty = clamp_duty(c_duty);
+        TIM16->CCR1 = (uint16_t)duty;
+    }
+
+    // ---------------------
+    // 4) Motor 4 (rear-right) on TIM1->CCR2
+    {
+    	int16_t pv  = (int16_t)round(motor4.filtered_ticks_per_sec);
+        set_motor_direction(setpoint_rr, GPIOB, GPIO_PIN_0, GPIOB, GPIO_PIN_1);
+       double out = controlador_PID(fabs(setpoint_rr), fabs(pv), &pidConsts4, &motor4_pidData, resetPID);
+       uint16_t c_duty = tick_to_duty(out);
+        uint16_t duty = clamp_duty(c_duty);
+        TIM1->CCR2 = (uint16_t)duty;
+    }
+}
