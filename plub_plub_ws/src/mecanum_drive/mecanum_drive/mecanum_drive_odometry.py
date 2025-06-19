@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 """ROS 2 node that converts wheel encoder ticks into an Odometry message and
 (optional) TF transform for a mecanum base."""
 
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Quaternion, Twist, PoseWithCovarianceStamped
@@ -12,15 +9,11 @@ from std_msgs.msg import Int16MultiArray
 from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped
 from tf_transformations import quaternion_from_euler, euler_from_quaternion
-<<<<<<< HEAD
-=======
 from math import sin, cos
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 from mecanum_drive.pose import Pose
 from mecanum_drive import odometry
 from builtin_interfaces.msg import Time
 
-<<<<<<< HEAD
 # Covariance matrices suggested by REP 105 for planar robots
 ODOM_POSE_COVARIANCE = [
     1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -45,7 +38,6 @@ class OdometryNode(Node):
         self.tf_broadcaster = TransformBroadcaster(self)
 
         # I/O topics
-=======
 ODOM_POSE_COVARIANCE = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
                         0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
@@ -67,15 +59,11 @@ class OdometryNode(Node):
         self.odometry = odometry.Odometry()
         self.tf_broadcaster = TransformBroadcaster(self)
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.odomPub = self.create_publisher(Odometry, 'odom', 10)
         self.create_subscription(Int16MultiArray, 'wheel_ticks', self.ticksCallback, 10)
         self.create_subscription(PoseWithCovarianceStamped, 'initialpose', self.on_initial_pose, 10)
 
-<<<<<<< HEAD
         # Parameters with defaults matching other nodes
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.declare_parameter('ticks_per_meter', 4332.0)
         self.declare_parameter('wheel_separation', 0.34)
         self.declare_parameter('wheel_separation_length', 0.24)
@@ -86,10 +74,7 @@ class OdometryNode(Node):
         self.declare_parameter('encoder_max', 32767)
         self.declare_parameter('publish_tf', True)
 
-<<<<<<< HEAD
         # Cache parameter values
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.ticksPerMeter = self.get_parameter('ticks_per_meter').value
         self.wheelSeparation = self.get_parameter('wheel_separation').value
         self.wheelSeparationLength = self.get_parameter('wheel_separation_length').value
@@ -100,17 +85,13 @@ class OdometryNode(Node):
         self.encoderMax = self.get_parameter('encoder_max').value
         self.publishTF = self.get_parameter('publish_tf').value
 
-<<<<<<< HEAD
         # Feed geometry & calibration to helper
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.odometry.setWheelSeparation(self.wheelSeparation)
         self.odometry.setWheelSeparationLength(self.wheelSeparationLength)
         self.odometry.setTicksPerMeter(self.ticksPerMeter)
         self.odometry.setEncoderRange(self.encoderMin, self.encoderMax)
         self.odometry.setTime(self.get_clock().now().nanoseconds * 1e-9)
 
-<<<<<<< HEAD
         # Periodic pose publication
         self.timer = self.create_timer(1.0 / self.rate_value, self.publish)
 
@@ -120,24 +101,19 @@ class OdometryNode(Node):
 
     def publish(self):
         """Integrate odometry and publish Odometry + optional TF."""
-=======
         self.timer = self.create_timer(1.0 / self.rate_value, self.publish)
 
     def publish(self):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         current_time = self.get_clock().now()
         self.odometry.updatePose(current_time.nanoseconds * 1e-9)
         pose = self.odometry.getPose()
 
-<<<<<<< HEAD
         # Convert yaw to quaternion once for both TF and odom msg
         q = quaternion_from_euler(0, 0, pose.theta)
 
         # ---------------- TF ----------------
-=======
         q = quaternion_from_euler(0, 0, pose.theta)
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         if self.publishTF:
             t = TransformStamped()
             t.header.stamp = current_time.to_msg()
@@ -146,19 +122,16 @@ class OdometryNode(Node):
             t.transform.translation.x = pose.x
             t.transform.translation.y = pose.y
             t.transform.translation.z = 0.0
-<<<<<<< HEAD
             t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w = q
             self.tf_broadcaster.sendTransform(t)
 
         # ---------------- Odometry message ----------------
-=======
             t.transform.rotation.x = q[0]
             t.transform.rotation.y = q[1]
             t.transform.rotation.z = q[2]
             t.transform.rotation.w = q[3]
             self.tf_broadcaster.sendTransform(t)
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         odom = Odometry()
         odom.header.stamp = current_time.to_msg()
         odom.header.frame_id = self.odomFrameID
@@ -178,7 +151,6 @@ class OdometryNode(Node):
         self.odomPub.publish(odom)
 
     def on_initial_pose(self, msg):
-<<<<<<< HEAD
         """Reset pose when an RViz2 "2D Pose Estimate" is received."""
         q = [msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,
              msg.pose.pose.orientation.z, msg.pose.pose.orientation.w]
@@ -187,7 +159,6 @@ class OdometryNode(Node):
         pose = Pose(x=msg.pose.pose.position.x,
                     y=msg.pose.pose.position.y,
                     theta=yaw)
-=======
         q = [msg.pose.pose.orientation.x,
              msg.pose.pose.orientation.y,
              msg.pose.pose.orientation.z,
@@ -199,20 +170,16 @@ class OdometryNode(Node):
         pose.y = msg.pose.pose.position.y
         pose.theta = yaw
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.get_logger().info(f'Setting initial pose to {pose}')
         self.odometry.setPose(pose)
 
     def ticksCallback(self, msg):
-<<<<<<< HEAD
         """Forward raw wheel ticks to the odometry integrator."""
         self.odometry.updateWheels(msg.data[0], msg.data[1], msg.data[2], msg.data[3])
 
 
-=======
         self.odometry.updateWheels(msg.data[0], msg.data[1], msg.data[2], msg.data[3])
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 def main(args=None):
     rclpy.init(args=args)
     node = OdometryNode()

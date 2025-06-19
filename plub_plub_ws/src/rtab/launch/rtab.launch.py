@@ -64,7 +64,6 @@ def launch_setup(context, *args, **kwargs):
     ]
 
     return [
-<<<<<<< HEAD
         Node(
             package="rtabmap_slam",
             executable="rtabmap",
@@ -73,7 +72,6 @@ def launch_setup(context, *args, **kwargs):
             parameters=parameters,
             remappings=remappings,
         ),
-=======
         LoadComposableNodes(
             target_container=name + "_container",
             composable_node_descriptions=[
@@ -87,7 +85,6 @@ def launch_setup(context, *args, **kwargs):
             ],
         ),
         
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
     ]
 
 

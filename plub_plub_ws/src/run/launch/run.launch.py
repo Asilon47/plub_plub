@@ -1,13 +1,10 @@
-<<<<<<< HEAD
 """Composite launch file that brings up the OAK-D camera, lidar, mecanum
 control, CAN, and RTAB-Map SLAM.
 """
 
 import os
 
-=======
 import os
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
@@ -15,7 +12,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
-<<<<<<< HEAD
 
 def generate_launch_description():
     # Locate the DepthAI driver package to reuse its default parameter file
@@ -102,7 +98,6 @@ def generate_launch_description():
     )
 
     return ld
-=======
 def generate_launch_description():
     depthai_prefix = get_package_share_directory("depthai_ros_driver")
 
@@ -189,4 +184,3 @@ def generate_launch_description():
     )
     return ld
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3

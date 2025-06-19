@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # plub_plub
 
 ---
@@ -77,7 +76,6 @@ No part of this code may be used, reproduced, or distributed in any form without
    ```bash
    git clone https://github.com/username/repo.git
    cd repo
-=======
 # **plub_plub – A Modular Hardware/Software Stack for Mobile Robotic**
 
 > **Author:** Asil Arnous  
@@ -216,4 +214,3 @@ This software is licensed, not sold. You have no rights to use, copy, modify, or
 ```
 
 *For academic evaluation purposes only. Commercial or open-source redistribution is strictly prohibited.*
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3

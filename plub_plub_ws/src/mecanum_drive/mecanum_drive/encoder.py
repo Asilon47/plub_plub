@@ -1,6 +1,5 @@
 from __future__ import division
 
-<<<<<<< HEAD
 class Encoder:
     """Tracks ticks for a single wheel encoder and reports the change
     since the last query."""
@@ -22,7 +21,6 @@ class Encoder:
 
     def initCount(self, startCount):
         """Reset the delta accumulator and remember the current count."""
-=======
 
 class Encoder:
     """Monitors a single wheel encoder and accumulates delta ticks
@@ -40,12 +38,10 @@ class Encoder:
         self.highThresh = low + self.range*70//100
 
     def initCount(self, startCount):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.delta = 0
         self.last = startCount
 
     def update(self, newCount):
-<<<<<<< HEAD
         """Process a fresh raw count from the encoder and accumulate ticks."""
         # Detect wrap‑around and compute signed increment
         if self.last > self.highThresh and newCount < self.lowThresh:
@@ -53,20 +49,17 @@ class Encoder:
             increment = newCount + self.range - self.last
         elif self.last < self.lowThresh and newCount > self.highThresh:
             # Counter rolled under its minimum
-=======
         if self.last > self.highThresh and newCount < self.lowThresh:
             # Wrapped around the upper limit
             increment = newCount + self.range - self.last
         elif self.last < self.lowThresh and newCount > self.highThresh:
             # Wrapped around the lower limit
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
             increment = newCount - self.range - self.last
         else:
             increment = newCount - self.last
 
         self.delta += increment
         self.last = newCount
-<<<<<<< HEAD
 
     def setReversed(self, isReversed):
         """Invert delta sign if the encoder is mounted in reverse."""
@@ -84,7 +77,6 @@ class Encoder:
             'range': self.range,
             'lowThresh': self.lowThresh,
             'highThresh': self.highThresh,
-=======
         
     def setReversed(self, isReversed):
         self.isReversed = isReversed
@@ -102,5 +94,4 @@ class Encoder:
             'range': self.range,
             'lowThresh': self.lowThresh,
             'highThresh': self.highThresh
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         }

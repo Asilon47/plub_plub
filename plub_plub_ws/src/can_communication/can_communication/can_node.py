@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """ROS 2 node that bridges wheel commands and feedback with a motor controller
 via CAN.  Publishes wheel ticks and consumes desired wheel rates every 100 ms."""
 
@@ -7,19 +6,16 @@ import struct
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Int16MultiArray
-=======
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Int16MultiArray
 import struct
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 import can
 
 
 class CANNode(Node):
-<<<<<<< HEAD
     """Handles ROS <-> CAN exchange for a four‑wheel platform."""
 
     def __init__(self):
@@ -27,7 +23,6 @@ class CANNode(Node):
         self.get_logger().info("CANNode starting…")
 
         # ---------- Parameters ----------
-=======
     """
     A ROS 2 node that:
       - Subscribes to a topic (`wheels_desired_rate`) to receive 4×Int16 rates.
@@ -41,7 +36,6 @@ class CANNode(Node):
         self.get_logger().info("Initializing CANNode...")
 
         # Declare & read ROS parameters (with defaults)
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.declare_parameter('can_interface', 'can0')
         self.declare_parameter('tx_can_id', 0x00000010)
         self.declare_parameter('rx_can_id', 0x00000001)
@@ -52,7 +46,6 @@ class CANNode(Node):
         self.rx_can_id = self.get_parameter('rx_can_id').value
         self.filter_incoming = self.get_parameter('filter_incoming').value
 
-<<<<<<< HEAD
         # ---------- ROS I/O ----------
         self.last_rates = [0, 0, 0, 0]  # cached desired wheel rates
         self.create_subscription(Int16MultiArray,
@@ -130,7 +123,6 @@ class CANListener(can.Listener):
         out = Int16MultiArray()
         out.data = ticks
         self.pub.publish(out)
-=======
         # Subscription: just update the buffer of desired wheel rates
         self.last_rates = [0, 0, 0, 0]
         self.subscription = self.create_subscription(
@@ -236,7 +228,6 @@ class CANListener(can.Listener):
         out = Int16MultiArray()
         out.data = [fl, fr, rl, rr]
         self.wheel_ticks_pub.publish(out)
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 
 
 def main(args=None):
@@ -247,11 +238,8 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
-<<<<<<< HEAD
         node.get_logger().info("CANNode shutting down.")
-=======
         node.get_logger().info("Shutting down CANNode.")
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         node.destroy_node()
         rclpy.shutdown()
 

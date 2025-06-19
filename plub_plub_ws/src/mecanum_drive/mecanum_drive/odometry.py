@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """Core odometry maths for a four-wheel mecanum base.
 
 Translates accumulated encoder ticks into a planar pose (x, y, yaw)
@@ -17,7 +16,6 @@ class Odometry:
 
     def __init__(self):
         # One incremental encoder per wheel
-=======
 from __future__ import division
 from math import pi, sin, cos
 from mecanum_drive.encoder import Encoder
@@ -29,12 +27,10 @@ class Odometry:
     """
 
     def __init__(self):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.frontLeftEncoder = Encoder()
         self.frontRightEncoder = Encoder()
         self.rearLeftEncoder = Encoder()
         self.rearRightEncoder = Encoder()
-<<<<<<< HEAD
 
         # Current pose estimate
         self.pose = Pose()
@@ -58,7 +54,6 @@ class Odometry:
 
     def setEncoderRange(self, low, high):
         """Configure wrap-around range for all four encoders."""
-=======
         self.pose = Pose()
         self.lastTime = 0
 
@@ -72,14 +67,12 @@ class Odometry:
         self.ticksPerMeter = ticks
         
     def setEncoderRange(self, low, high):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.frontLeftEncoder.setRange(low, high)
         self.frontRightEncoder.setRange(low, high)
         self.rearLeftEncoder.setRange(low, high)
         self.rearRightEncoder.setRange(low, high)
 
     def setTime(self, newTime):
-<<<<<<< HEAD
         """Initialise the timestamp used for velocity calculations (s)."""
         self.lastTime = newTime
 
@@ -97,7 +90,6 @@ class Odometry:
     def updatePose(self, newTime):
         """Integrate wheel travel since last call and update the pose."""
         # Convert tick deltas to distance (m)
-=======
         self.lastTime = newTime
         
     def updateWheels(self, fl, fr, rl, rr):
@@ -110,12 +102,10 @@ class Odometry:
         """Updates the pose based on the accumulated encoder ticks
         of the four mecanum wheels.
         """
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         frontLeftTravel = self.frontLeftEncoder.getDelta() / self.ticksPerMeter
         frontRightTravel = self.frontRightEncoder.getDelta() / self.ticksPerMeter
         rearLeftTravel = self.rearLeftEncoder.getDelta() / self.ticksPerMeter
         rearRightTravel = self.rearRightEncoder.getDelta() / self.ticksPerMeter
-<<<<<<< HEAD
 
         deltaTime = newTime - self.lastTime
 
@@ -142,7 +132,6 @@ class Odometry:
 
     def getPose(self):
         return self.pose
-=======
         deltaTime = newTime - self.lastTime
 
         deltaXTravel = (frontLeftTravel + frontRightTravel + rearLeftTravel + rearRightTravel) / 4.0
@@ -160,7 +149,6 @@ class Odometry:
 
     def getPose(self):
         return self.pose;
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 
     def setPose(self, newPose):
         self.pose = newPose

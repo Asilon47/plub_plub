@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 """ROS 2 node that translates geometry_msgs/Twist commands into per-wheel
 rate targets for a mecanum drive base.  Relies on the `mecanum_drive.`
 `controller.Controller` class for the kinematic conversion.
 """
 
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
@@ -13,19 +10,15 @@ from std_msgs.msg import Int16MultiArray
 
 from mecanum_drive import controller
 
-<<<<<<< HEAD
 
 class ControllerNode(Node):
     """Subscribes to /cmd_vel and publishes wheel speeds on
     /wheels_desired_rate at a fixed frequency."""
-=======
 class ControllerNode(Node):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 
     def __init__(self):
         super().__init__('mecanum_drive_controller')
 
-<<<<<<< HEAD
         # Instantiate the kinematic converter
         self.controller = controller.Controller()
 
@@ -47,7 +40,6 @@ class ControllerNode(Node):
         self.declare_parameter('timeout', 0.2) # s without cmd_vel before stop
 
         # Cache parameter values for fast access
-=======
         self.controller = controller.Controller()
         self.linearXVelocity = 0.0
         self.linearYVelocity = 0.0
@@ -61,7 +53,6 @@ class ControllerNode(Node):
         self.declare_parameter('rate', 10.0)
         self.declare_parameter('timeout', 0.2)
 
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.ticksPerMeter = self.get_parameter('ticks_per_meter').value
         self.wheelSeparation = self.get_parameter('wheel_separation').value
         self.wheelSeparationLength = self.get_parameter('wheel_separation_length').value
@@ -69,16 +60,12 @@ class ControllerNode(Node):
         self.rate_value = self.get_parameter('rate').value
         self.timeout = self.get_parameter('timeout').value
 
-<<<<<<< HEAD
         # Push parameters into the controller object
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.controller.setWheelSeparation(self.wheelSeparation)
         self.controller.setWheelSeparationLength(self.wheelSeparationLength)
         self.controller.setTicksPerMeter(self.ticksPerMeter)
         self.controller.setMaxMotorSpeed(self.maxMotorSpeed)
 
-<<<<<<< HEAD
         # ---- ROS interfaces ---------------------------------------------
         self.wheelPub = self.create_publisher(Int16MultiArray, 'wheels_desired_rate', 10)
         self.subscription = self.create_subscription(
@@ -116,7 +103,6 @@ class ControllerNode(Node):
 
     def twistCallback(self, twist: Twist):
         """Store the latest cmd_vel and time stamp for timeout detection."""
-=======
         self.wheelPub = self.create_publisher(Int16MultiArray, 'wheels_desired_rate', 10)
         self.subscription = self.create_subscription(Twist, 'cmd_vel', self.twistCallback, 10)
 
@@ -134,20 +120,16 @@ class ControllerNode(Node):
         self.wheelPub.publish(self.wheels_to_send)
 
     def twistCallback(self, twist):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.linearXVelocity = twist.linear.x
         self.linearYVelocity = twist.linear.y
         self.angularVelocity = twist.angular.z
         self.lastTwistTime = self.get_clock().now()
 
-<<<<<<< HEAD
 
 # ----------------------------------------------------------------------
 # Entry point
 # ----------------------------------------------------------------------
 
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
 def main(args=None):
     rclpy.init(args=args)
     node = ControllerNode()

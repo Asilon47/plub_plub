@@ -1,22 +1,18 @@
 from __future__ import division
 
 class MotorCommand:
-<<<<<<< HEAD
     """Holds motor control commands for robot."""
 
     def __init__(self):
         # Initialise desired wheel speeds (ticks/s) to zero
-=======
     """Holds motor control commands for a differential-drive robot.
     """
 
     def __init__(self):
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         self.frontLeft = 0
         self.frontRight = 0
         self.rearLeft = 0
         self.rearRight = 0
-<<<<<<< HEAD
 
 
 class Controller:
@@ -57,7 +53,6 @@ class Controller:
         )
         if max_requested > self.maxMotorSpeed:
             factor = self.maxMotorSpeed / max_requested
-=======
         
 
 class Controller:
@@ -90,13 +85,11 @@ class Controller:
         # Adjust speeds if they exceed the maximum.
         if max(speeds.frontLeft, speeds.frontRight, speeds.rearLeft, speeds.rearRight) > self.maxMotorSpeed:
             factor = self.maxMotorSpeed / max(speeds.frontLeft, speeds.frontRight, speeds.rearLeft, speeds.rearRight)
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
             speeds.frontLeft *= factor
             speeds.frontRight *= factor
             speeds.rearLeft *= factor
             speeds.rearRight *= factor
 
-<<<<<<< HEAD
         if speeds.frontLeft != 0 and abs(speeds.frontLeft) < self.minMotorSpeed:
             speeds.frontLeft =  self.minMotorSpeed if speeds.frontLeft > 0 else -self.minMotorSpeed
         if speeds.frontRight != 0 and abs(speeds.frontRight) < self.minMotorSpeed:
@@ -108,24 +101,19 @@ class Controller:
 
 
         # Cast to int before returning, as required by downstream code
-=======
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
         speeds.frontLeft = int(speeds.frontLeft)
         speeds.frontRight = int(speeds.frontRight)
         speeds.rearLeft = int(speeds.rearLeft)
         speeds.rearRight = int(speeds.rearRight)
         return speeds
 
-<<<<<<< HEAD
     # Simple setter methods follow
     def setWheelSeparation(self, separation):
         self.wheelSeparation = separation
 
-=======
     def setWheelSeparation(self, separation):
         self.wheelSeparation = separation 
         
->>>>>>> 3c11c9864d18f234fb81bf437f364af2d23b27f3
     def setWheelSeparationLength(self, separation):
         self.wheelSeparationLength = separation
 
