@@ -10,8 +10,7 @@ from launch.actions import (
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import LoadComposableNodes, Node
-from launch_ros.descriptions import ComposableNode
+from launch_ros.actions import Node
 
 
 def launch_setup(context, *args, **kwargs):
@@ -72,27 +71,13 @@ def launch_setup(context, *args, **kwargs):
             parameters=parameters,
             remappings=remappings,
         ),
-        LoadComposableNodes(
-            target_container=name + "_container",
-            composable_node_descriptions=[
-                ComposableNode(
-                    package="rtabmap_slam",
-                    plugin="rtabmap_slam::CoreWrapper",
-                    name="rtabmap",
-                    parameters=parameters,
-                    remappings=remappings,
-                ),
-            ],
-        ),
         
     ]
 
 
-def generate_launch_description():
-    declared_arguments = [
-        DeclareLaunchArgument("name", default_value="oak"),
-    ]
 
-    return LaunchDescription(
-        declared_arguments + [OpaqueFunction(function=launch_setup)]
-    )
+def generate_launch_description():
+    return LaunchDescription([
+        DeclareLaunchArgument("name", default_value="oak"),
+        OpaqueFunction(function=launch_setup),
+    ])
